@@ -32,10 +32,10 @@ Follow these steps to set up the project locally:
     3.1. Create a env file based on .env.example.
     3.2. Set up mail configuration.
     3.3. Add all the credentials for gitHub and google:
-        GOOGLE_CLIENT_ID= your-google-client-id
-        GOOGLE_CLIENT_SECRET= your-google-client-secret
-        GITHUB_CLIENT_ID= your-github-client-id
-        GITHUB_CLIENT_SECRET= your-github-client-secret
+        - GOOGLE_CLIENT_ID= your-google-client-id
+        - GOOGLE_CLIENT_SECRET= your-google-client-secret
+        - GITHUB_CLIENT_ID= your-github-client-id
+        - GITHUB_CLIENT_SECRET= your-github-client-secret
 
 
 ## Contributing
