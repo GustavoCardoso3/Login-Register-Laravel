@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\Auth;
 
 class PageController extends Controller
 {
+    /**
+     * Displays the Index page.
+     *
+     * @return \Illuminate\View\View
+     */
     function index(){
         $user = Auth::user();
 

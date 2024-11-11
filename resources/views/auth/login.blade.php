@@ -30,10 +30,11 @@
                       <i class="bi bi-google"></i>
                     </button>
                   </a>
-      
-                  <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-floating mx-1">
-                    <i class="bi bi-github"></i>
-                  </button>
+                  <a href="{{route('auth.github.redirect')}}">
+                    <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-floating mx-1">
+                      <i class="bi bi-github"></i>
+                    </button>
+                  </a>
                 </div>
       
                 <div class="divider d-flex align-items-center my-4">
