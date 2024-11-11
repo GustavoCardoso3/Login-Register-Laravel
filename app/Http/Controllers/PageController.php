@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class PageManager extends Controller
+class PageController extends Controller
 {
     function index(){
         $user = Auth::user();

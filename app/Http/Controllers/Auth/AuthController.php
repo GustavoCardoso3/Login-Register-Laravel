@@ -1,26 +1,30 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Laravel\Socialite\Facades\Socialite;
 
 
-class AuthManager extends Controller
+
+class AuthController extends Controller
 {
-    // GET
     function login(){
-        return view('login');
+        return view('auth.login');
     }
 
     function register(){
-        return view('register');
+        return view('auth.register');
     }
 
-    // POST
     function loginPost(Request $request){
         $request->validate([
             'email' => 'required|email',
@@ -56,7 +60,47 @@ class AuthManager extends Controller
         if(!$user){
             return redirect(route('register'))->with('error', 'Registration failed.');
         }
-        return redirect(route('login'))->with('success', 'Registration completed, you can login now!');
+
+        event(new Registered($user));
+
+        Auth::login($user);
+
+        return redirect(route('verification.notice'))->with('success', 'Registration completed! Please verify your email.');
+    }
+    function verifyNotice(){
+        return view('auth.verify-email');
+    }
+    function verifyEmail(EmailVerificationRequest $request) {
+        $request->fulfill();
+     
+        return redirect('/index');
+    }
+    function verifyHandler(Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+     
+        return back()->with('message', 'Verification link sent!');
+    }
+
+    function googleCallback(){
+        $googleUser = Socialite::driver('google')->user();
+    
+        $user = User::updateOrCreate(
+            ['google_id'=> $googleUser ->id],
+            [
+                'name'=> $googleUser->name,
+                'email' => $googleUser->email,
+                'password' => Str::password(12),
+                'email_verified_at' => now()
+            ]
+        );
+    
+        Auth::login($user);
+    
+        return redirect(route('index'));
+        
+    }
+    function googleRedirect(){
+        return Socialite::driver('google')->redirect();
     }
 
     function logout(){

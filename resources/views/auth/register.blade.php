@@ -25,27 +25,25 @@
               <form action="{{route('register.post')}}" method="POST">
                 @csrf
                 <!-- Email input -->
-                <div data-mdb-input-init class="form-outline mb-4">
+                <div data-mdb-input-init class="form-outline mb-3">
                     <input name="name" type="name" id="form3Example3" class="form-control form-control-lg"
                       placeholder="Enter your name" />
                   </div>
                 <!-- Email input -->
-                <div data-mdb-input-init class="form-outline mb-4">
+                <div data-mdb-input-init class="form-outline mb-3">
                   <input name="email" type="email" id="form3Example3" class="form-control form-control-lg"
                     placeholder="Enter a valid email address" />
                 </div>
       
                 <!-- Password input -->
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input name="password" type="password" id="form3Example4" class="form-control form-control-lg"
-                    placeholder="Enter password" />
-                </div>
-                <!-- Password input confirm -->
-                <div data-mdb-input-init class="form-outline mb-4">
-                    <input name="confirm-password" type="password" id="form3Example4" class="form-control form-control-lg"
-                        placeholder="Confirm password" />
+                <div class="form-outline mb-3 position-relative">
+                  <input name="password" type="password" id="password" class="form-control form-control-lg" placeholder="Enter password" />
                 </div>
 
+                <!-- Confirm Password input -->
+                <div  class="form-outline mb-3 position-relative">
+                  <input name="confirm-password" type="password" id="password-confirm" class="form-control form-control-lg" placeholder="Confirm password" />
+                </div>
                 <div class="text-center text-lg-start mt-4 pt-2">
                   <button  type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg"
                     style="padding-left: 2.5rem; padding-right: 2.5rem;">Register</button>

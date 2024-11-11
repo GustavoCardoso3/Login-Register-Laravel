@@ -25,9 +25,11 @@
                 @csrf
                 <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                   <p class="lead fw-normal mb-0 me-3">Sign in with</p>
-                  <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-floating mx-1">
-                    <i class="bi bi-google"></i>
-                  </button>
+                  <a href="{{route('auth.google.redirect')}}">
+                    <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-floating mx-1">
+                      <i class="bi bi-google"></i>
+                    </button>
+                  </a>
       
                   <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-floating mx-1">
                     <i class="bi bi-github"></i>
@@ -45,9 +47,14 @@
                 </div>
       
                 <!-- Password input -->
-                <div data-mdb-input-init class="form-outline mb-3">
-                  <input name="password" type="password" id="form3Example4" class="form-control form-control-lg"
+                <div data-mdb-input-init class="form-outline mb-3 ">
+                  <input name="password" type="password" id="password" class="form-control form-control-lg"
                     placeholder="Enter password" />
+                    <div class="d-flex mt-2">
+                      <i class="bi bi-eye-slash mr-2" style="cursor: pointer;" id="togglePassword"></i>
+                      <p>Toggle password</p>
+                    </div>
+
                 </div>
       
                 <div class="d-flex justify-content-between align-items-center">
@@ -74,5 +81,18 @@
         </div>
       </section>
 </div>
-
+<script>
+  const togglePassword = document.querySelector('#togglePassword');
+  const password = document.querySelector('#password');
+  togglePassword.addEventListener('click', () => {
+      // Toggle the type attribute using
+      // getAttribure() method
+      const type = password
+          .getAttribute('type') === 'password' ?
+          'text' : 'password';
+      password.setAttribute('type', type);
+      // Toggle the eye and bi-eye icon
+      this.classList.toggle('bi-eye');
+  });
+</script>
 @endsection
