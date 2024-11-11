@@ -32,6 +32,7 @@ Follow these steps to set up the project locally:
 5. Set up mail configuration in .env.
 6. Add all the credentials for gitHub and google.
 
+
 ## Contributing
 
 If you'd like to contribute to this project, please fork the repository and create a pull request with your changes. Ensure that any new features or bug fixes are accompanied by tests.
