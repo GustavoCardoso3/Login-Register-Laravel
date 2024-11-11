@@ -30,7 +30,8 @@ Follow these steps to set up the project locally:
 3. Migrate the data base.
 4. Create a env file based on .env.example.
 5. Set up mail configuration in .env.
-6. Add all the credentials for gitHub and google:.
+6. Add all the credentials for gitHub and google:
+<br>
 ![alt text](image.png)
 
 
