@@ -50,5 +50,5 @@ This project is open-source and available under the MIT License.
 
 - [Laravel] - The PHP framework used for this project.
 - [Socialite] - Laravel package for OAuth authentication.
-- [Google Developer] - Console - For obtaining OAuth credentials for Google login.
-- [GitHub Developer] - Settings - For obtaining OAuth credentials for GitHub login.
+- [Google Developer] - For obtaining OAuth credentials for Google login.
+- [GitHub Developer] - For obtaining OAuth credentials for GitHub login.
