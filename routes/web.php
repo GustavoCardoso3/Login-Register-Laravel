@@ -33,6 +33,14 @@ Route::get('/email/verify', [AuthController::class,'verifyNotice'])->middleware(
 Route::get('/email/verify/{id}/{hash}',[AuthController::class,'verifyEmail'])->middleware(['auth','signed'])->name('verification.verify');
 Route::post('/email/verification-notification',[AuthController::class ,'verifyHandler'])->middleware(['auth','throttle:6,1'])->name('verification.send');
 
+// Forgot password routes
+Route::get('/forgot-password', [AuthController::class,'forgotPassword'])->name('password.request');
+Route::post('/forgot-password',[AuthController::class,'forgotPasswordRequest'])->name('password.email');
+
+// Reset password routes
+Route::get('/reset-password/{token}', [AuthController::class,'resetPassword'])->name('password.reset');
+Route::post('/reset-password',[AuthController::class,'resetPasswordRequest'])->name('password.update');
+
 // Protected routes (only accessible after login and email verification)
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/index',[PageController::class,'index'])->name('index');

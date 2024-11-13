@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title','Register')
+@section('title','Forgot Password')
 @section('content')
 <div class="container" style="margin-top: 200px">
     <section class="vh-100">
@@ -22,33 +22,17 @@
                     <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
                 <br>
-              <form action="{{route('register.post')}}" method="POST">
+              <form action="{{route('password.email')}}" method="POST">
                 @csrf
-                <!-- Name input -->
-                <div data-mdb-input-init class="form-outline mb-3">
-                    <input name="name" type="name" id="form3Example3" class="form-control form-control-lg"
-                      placeholder="Enter your name" required/>
-                  </div>
                 <!-- Email input -->
                 <div data-mdb-input-init class="form-outline mb-3">
                   <input name="email" type="email" id="form3Example3" class="form-control form-control-lg"
                     placeholder="Enter a valid email address" required/>
                 </div>
-      
-                <!-- Password input -->
-                <div class="form-outline mb-3 position-relative">
-                  <input name="password" type="password" id="password" class="form-control form-control-lg" placeholder="Enter password" required/>
-                </div>
 
-                <!-- Confirm Password input -->
-                <div  class="form-outline mb-3 position-relative">
-                  <input name="confirm-password" type="password" id="password-confirm" class="form-control form-control-lg" placeholder="Confirm password" required/>
-                </div>
                 <div class="text-center text-lg-start mt-4 pt-2">
                   <button  type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg"
-                    style="padding-left: 2.5rem; padding-right: 2.5rem;">Register</button>
-                  <p class="small fw-bold mt-2 pt-1 mb-0">Already have an account? <a href="{{route('login')}}"
-                      class="link-danger">Login</a></p>
+                    style="padding-left: 2.5rem; padding-right: 2.5rem;">Send email</button>
                 </div>
       
               </form>

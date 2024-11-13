@@ -44,13 +44,13 @@
                 <!-- Email input -->
                 <div data-mdb-input-init class="form-outline mb-4">
                   <input name="email" type="email" id="form3Example3" class="form-control form-control-lg"
-                    placeholder="Enter a valid email address" />
+                    placeholder="Enter a valid email address" required/>
                 </div>
       
                 <!-- Password input -->
                 <div data-mdb-input-init class="form-outline mb-3 ">
                   <input name="password" type="password" id="password" class="form-control form-control-lg"
-                    placeholder="Enter password" />
+                    placeholder="Enter password" required/>
                     <div class="d-flex mt-2">
                       <i class="bi bi-eye-slash mr-2" style="cursor: pointer;" id="togglePassword"></i>
                       <p>Toggle password</p>
@@ -66,7 +66,7 @@
                       Remember me
                     </label>
                   </div>
-                  <a href="#!" class="text-body" style="color: white !important">Forgot password?</a>
+                  <a href="{{route('password.request')}}" class="text-body" style="color: white !important">Forgot password?</a>
                 </div>
       
                 <div class="text-center text-lg-start mt-4 pt-2">

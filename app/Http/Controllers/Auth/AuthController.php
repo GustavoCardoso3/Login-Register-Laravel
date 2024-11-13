@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
 
 class AuthController extends Controller
 {
@@ -71,7 +73,7 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:8|regex:/[0-9]/',
+            'password' => 'required|min:8|max:32|regex:/[0-9]/',
             'confirm-password' => 'required|same:password'
         ], [
             'confirm-password.same' => 'The confirmation password must match the password.',
@@ -137,19 +139,25 @@ class AuthController extends Controller
      */
     function googleCallback(){
         $googleUser = Socialite::driver('google')->user();
+
+        $user = User::where('email', $googleUser->email)->first();
     
-        $user = User::updateOrCreate(
-            ['google_id'=> $googleUser ->id],
-            [
-                'name'=> $googleUser->name,
+        if ($user) {
+            if (!$user->google_id) {
+                $user->google_id = $googleUser->id;
+                $user->save();
+            }
+        } else {
+            $user = User::create([
+                'name' => $googleUser->name,
                 'email' => $googleUser->email,
-                'password' => Str::password(12),
+                'password' => Str::random(12),
+                'google_id' => $googleUser->id,
                 'email_verified_at' => now()
-            ]
-        );
+            ]);
+        }
     
         Auth::login($user, true);
-    
         return redirect(route('index'));
     }
 
@@ -171,17 +179,25 @@ class AuthController extends Controller
      */
     function githubCallback(){
         $githubUser = Socialite::driver('github')->user();
-        $user = User::updateOrCreate(
-            ['github_id'=> $githubUser ->id],
-            [
-                'name'=> $githubUser->name,
+
+        $user = User::where('email', $githubUser->email)->first();
+    
+        if ($user) {
+            if (!$user->github_id) {
+                $user->github_id = $githubUser->id;
+                $user->save();
+            }
+        } else {
+            $user = User::create([
+                'name' => $githubUser->name,
                 'email' => $githubUser->email,
-                'password' => Str::password(12),
+                'password' => Str::random(12), // You might consider generating or encrypting a random password
+                'github_id' => $githubUser->id,
                 'email_verified_at' => now()
-            ]
-        );
+            ]);
+        }
+    
         Auth::login($user, true);
-        
         return redirect(route('index'));
     }
 
@@ -192,6 +208,88 @@ class AuthController extends Controller
      */
     function githubRedirect(){
         return Socialite::driver('github')->redirect();
+    }
+
+    /**
+     * Displays the forgot password page.
+     *
+     * @return \Illuminate\View\View
+     */
+    function forgotPassword(){
+        return view('auth.forgot-password');
+    }
+
+    /**
+     * Handles a request to send a password reset link.
+     * Validates the provided email and checks if the user is registered using standard credentials.
+     * Password reset is not permitted for accounts linked with Google or GitHub.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    function forgotPasswordRequest(Request $request) {
+        $request->validate(['email' => 'required|email']);
+
+        $user = User::where('email', $request->email)->first();
+    
+        if ($user && ($user->google_id || $user->github_id)) {
+            return back()->withErrors(['email' => 'Password reset is not allowed for accounts linked with Google or GitHub.']);
+        }
+    
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+    
+        return $status === Password::RESET_LINK_SENT
+                    ? back()->with(['status' => __($status)])
+                    : back()->withErrors(['email' => __($status)]);
+    }
+
+    /**
+     * Displays the password reset page for a given token.
+     *
+     * @param  string  $token  The password reset token.
+     * @return \Illuminate\View\View
+     */
+    function resetPassword(string $token) {
+        return view('auth.reset-password', ['token' => $token]);
+    }
+
+    /**
+     * Handles the request to reset the user's password.
+     * Validates input, checks token validity, and updates the password if valid.
+     * Triggers the PasswordReset event upon successful update.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    function resetPasswordRequest(Request $request) {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8|max:32|regex:/[0-9]/',
+            'confirm-password' => 'required|same:password'
+        ], [
+            'confirm-password.same' => 'The confirmation password must match the password.',
+            'password.regex' => 'You need at least one number in the password',
+        ]);
+        
+        $status = Password::reset(
+            $request->only('email', 'password', 'confirm-password', 'token'),
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
+     
+                $user->save();
+     
+                event(new PasswordReset($user));
+            }
+        );
+     
+        return $status === Password::PASSWORD_RESET
+                    ? redirect()->route('login')->with('status', __($status))
+                    : back()->withErrors(['email' => [__($status)]]);
     }
 
     /**
